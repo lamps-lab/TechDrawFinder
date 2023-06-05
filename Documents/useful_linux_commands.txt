@@ -1,3 +1,5 @@
+Useful Linux Commands:
+
 -- To copy files from local to the remote directory: scp /Users/muntabirc/conversion.sh mchoudhury@hubble.cs.odu.edu:~/ (this can be done using rsync)
 -- To copy and send a directory from local to remote: scp -r <path to directory> mchoudhury@hubble.cs.odu.edu:~/ (this can be done using rsync)
 -- To copy or send a directory from remote to local: scp -r mchoudhury@hubble.cs.odu.edu:~/path/to/directory /path/to/local_directory
@@ -11,3 +13,15 @@ Conversion of pdf to tiff or png using ghostcript: gs -q -sDEVICE=png16m -r300 -
 Repair any pdf (scaling or font issue while converting from pdf to image) using ghostscript: gs -o gs-repaired---35.pdf -dPDFSETTINGS=/prepress -sDEVICE=pdfwrite 35.pdf
 -- To convert multiple files in a directory with a specific extension such as, .txt -> .php: find . -depth -name "*.txt" -exec sh -c 'f="{}"; mv -- "$f" "${f%.txt}.php"' \;
 -- To move a directory from /home/mchoudhury to a shared root directory, we need to mount it. For example: mv -v data/ -v /data/mchoudhury/
+
+
+Useful Git Commands:
+– git clone (this command is used to clone the repository)
+Example: git clone https://github.com/lamps-lab/ImageSearchEngine.git
+– git status (this command is used to see the status of adding, modifying, or deleting the files in the directory)
+– git add . (this command is used to add files)
+– git pull (this command is used to submit a pull request and download all files that has been added already, modified)
+– git commit (this command is used to commit the files that is added or modified)
+Example: git commit -m “files added” (i.e., -m means message)
+– git push (this command is used to push the files to the main/master branch)
+Example: git push origin main/master (you need to identify whether the directory is the main or master branch)
