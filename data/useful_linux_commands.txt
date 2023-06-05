@@ -1,0 +1,13 @@
+-- To copy files from local to the remote directory: scp /Users/muntabirc/conversion.sh mchoudhury@hubble.cs.odu.edu:~/ (this can be done using rsync)
+-- To copy and send a directory from local to remote: scp -r <path to directory> mchoudhury@hubble.cs.odu.edu:~/ (this can be done using rsync)
+-- To copy or send a directory from remote to local: scp -r mchoudhury@hubble.cs.odu.edu:~/path/to/directory /path/to/local_directory
+-- To move all the files from one directory to another: mv ~/<from the directory you want to move>/* ~/<to the directory or destination directory>
+-- To see the running process in the server: ps aux|grep <process_name>. For example, ps aux|grep stanford
+General use of wget command: wget --wait=10 --directory-prefix="\Users\Muntabir\Documents\Graduate School_ODU\RA\MIT_Sample\xml_etd\output" --input-file list.txt
+-- To check the number of files a directory contains: ls -l | wc -l
+Create a multiple sub-directory under a parent directory: mkdir -p png/{sample1,sample2}
+-- To add SDK directory to the shell path: export PATH=/home/mchoudhury/google-cloud-sdk/bin:$PATH
+Conversion of pdf to tiff or png using ghostcript: gs -q -sDEVICE=png16m -r300 -dBATCH -dPDFFitPage -dNOPAUSE -dFirstPage=1 -dLastPage=106 -sOutputFile=out%d.png 1.pdf
+Repair any pdf (scaling or font issue while converting from pdf to image) using ghostscript: gs -o gs-repaired---35.pdf -dPDFSETTINGS=/prepress -sDEVICE=pdfwrite 35.pdf
+-- To convert multiple files in a directory with a specific extension such as, .txt -> .php: find . -depth -name "*.txt" -exec sh -c 'f="{}"; mv -- "$f" "${f%.txt}.php"' \;
+-- To move a directory from /home/mchoudhury to a shared root directory, we need to mount it. For example: mv -v data/ -v /data/mchoudhury/
