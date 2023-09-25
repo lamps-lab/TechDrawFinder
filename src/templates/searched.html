@@ -11,25 +11,51 @@
 
   </head>
   <body>
-    <h1>Vector Search</h1>
+  <!-- Page Header -->
+  <form>
+     <div class="p-3 mb-2 bg-dark text-white text-center">
+ 	<p class="text-primary"><h1>Patent Search Engine</h1></p>	
+     </div>
+  </form>
+  
+  <!-- Search Box -->
+  <div class="container-fluid">
+    <form class="d-flex" role="search">
+     	 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      	<button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
+  
+  <!-- Image Upload and return query result -->
+  <div class="container-fluid">
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name="file"/>
-        <button type="submit">upload</button>
+	<div class="mb-3">
+  	     <input class="form-control" type="file" name="file"/>
+	</div>
+	<div class="col-auto">
+    		<button type="submit" class="btn btn-primary mb-3">upload</button>
+  	</div>
     </form>
    <form class="d-flex" method = POST action = "{% url 'searched' %}">
     {% if img %}
-        <body class="container " style="padding-top: 5%;">
+        <body class="container " style="padding-top: 3%;">
           <div class="row">
             {% for pic in img %}
+		<div class="col-md-4">
                   <div class="thumbnail">
                     <img src='{% static pic %}' class="img-responsive" style="width:200px;height:300px;"/>
-			<p> {{pic}} </p>
-                </div>
+			<div class ="searched">
+			<p>{{pic}}</p>
+			</div>
+			</a>
+		     </div>
+                 </div>
             {% endfor %}
-          </div>
+           </div>
+	 </body>
 	</form>
-      </body>
+      </div>
     {% endif %}
 </body>
 </html>
