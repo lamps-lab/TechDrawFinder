@@ -20,14 +20,16 @@
   
   <!-- Search Box -->
   <div class="container-fluid">
-    <form class="d-flex" role="search">
-     	 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+    <form class="d-flex" method = 'get' action = "{% url 'searched' %}">
+     	 <input class="form-control me-2" type="search" placeholder="Search" name = 'query' aria-label="Search"/>
       	<button class="btn btn-outline-success" type="submit">Search</button>
     </form>
   </div>
   
   <!-- Image Upload and return query result -->
   <div class="container-fluid">
+	
+    <!-- Uploading the Image -->
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 	<div class="mb-3">
@@ -37,25 +39,39 @@
     		<button type="submit" class="btn btn-primary mb-3">upload</button>
   	</div>
     </form>
-   <form class="d-flex" method = POST action = "{% url 'searched' %}">
-    {% if img %}
-        <body class="container " style="padding-top: 3%;">
-          <div class="row">
-            {% for pic in img %}
-		<div class="col-md-4">
-                  <div class="thumbnail">
-                    <img src='{% static pic %}' class="img-responsive" style="width:200px;height:300px;"/>
-			<div class ="searched">
-			<p>{{pic}}</p>
-			</div>
-			</a>
-		     </div>
-                 </div>
-            {% endfor %}
-           </div>
-	 </body>
+	
+    <!-- Displaying User Query -->
+    
+    <form>
+    	{% if query %}
+        	<img src='{{ query }}' class="img-responsive" style="width:200px; height:500px;"/>
+    	{% endif %}
+    </form>
+	
+    <!-- Displaying the Query Results -->
+   
+   <h3><center> Query Results </center></h3>
+   <form>
+       <form class="d-flex" method = POST action = "{% url 'searched' %}">
+          {% if img %}
+          <body class="container " style="padding-top: 3%;">
+            <div class="row">
+               {% for pic in img %}
+		  <div class="col-md-4">
+                     <div class="thumbnail">
+                       <img src='{% static pic %}' class="img-responsive" style="width:200px;height:300px;"/>
+		     <div class ="searched">
+		     <p>{{pic}}</p>
+		   </div>
+		   </a>
+		 </div>
+               </div>
+               {% endfor %}
+            </div>
+	  </body>
 	</form>
       </div>
     {% endif %}
+   </form>
 </body>
 </html>
