@@ -22,6 +22,9 @@ from django.core.files.storage import FileSystemStorage
 from transformers import CLIPProcessor, CLIPModel, CLIPTokenizer
 
 # Create your views here.
+
+
+## Loading CLIP model
 def get_model_info(model_ID, device):
 	model = CLIPModel.from_pretrained(model_ID).to(device)
 	processor = CLIPProcessor.from_pretrained(model_ID)
@@ -32,11 +35,20 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model_ID = "openai/clip-vit-base-patch32"
 model, processor, tokenizer = get_model_info(model_ID, device)
 
+## Image Embedding
 def get_single_image_embedding(my_image):
 	image = processor(text = None, images = my_image, return_tensors="pt")["pixel_values"].to(device)
 	embed = model.get_image_features(image)
 	embed_np = embed.cpu().detach().numpy()
 	return embed_np
+
+## Text Embedding
+def get_single_text_embedding(text):
+	inputs = tokenizer(text, return_tensors = "pt").to(device)
+	text_embeddings = model.get_text_features(**inputs)
+	embedding_as_np = text_embeddings.cpu().detach().numpy()
+	return embedding_as_np
+
 
 #def home(request):
 #	return render(request, 'events/home.html', {})
@@ -54,7 +66,8 @@ class ImageListView(ListView):
 	return render(request, 'picture_list.html', {'picture_list': picture_list})
 '''
 
-file_path = "/Users/muntabir/search-engine/vector_search/static/*.png"
+#file_path = "./../vector_search/static/*.png"
+#file_path = "/Users/muntabir/search-engine/vector_search/static/*.png"
 
 def read_img_path(file):
 	data = glob.glob(file)
@@ -70,27 +83,49 @@ def searched(request):
 		fs = FileSystemStorage() ##user query will be saved
 		files = request.FILES.get('file')
 		filename = fs.save(files.name, files)
-		#print(filename)
-		#url_img = fs.url(filename)
-		#print(url_img)
-		#data.append(url_img.split('/')[-1])
-		#print(data)
 
-		index = faiss.read_index('/Users/muntabir/search-engine/vector_search/vector/vector_db/large.index')
+		index = faiss.read_index('/Users/muntabir/search-engine/vector_search/vector/vector_db/image.index')
 		
 		path = '/Users/muntabir/search-engine/vector_search/media/'
+		
+		## Displaying the user query
+		url_img = fs.url(filename)
+
+
 		query_image = Image.open((os.path.join(path)+ filename), 'r')
+		
 		query_embedding = get_single_image_embedding(query_image)
 		
 		query = np.array(query_embedding)
-		D, I = index.search(query, k=5)
-		fn = read_img_path(file_path)
+		D, I = index.search(query, k=7)
+		fn = pd.read_csv('./../vector_search/imageonly.csv')
 		images = []
 		for x in I:
 			for pic in x:
-				result = open(fn['img_only'][pic], 'r')
-					
+				result = open(fn['img_only'][pic], 'r')				
 				images.append(result.name.split('/')[-1])
 				
-		return render(request, 'searched.html', {'img':images})
+		return render(request, 'searched.html', {'query':url_img, 'img':images})
+
+	else:
+		txt = request.GET.get("query")
+		
+		txt_idx = faiss.read_index('/Users/muntabir/search-engine/vector_search/vector/vector_db/text.index')
+		
+		if txt is not None:
+			text_query = get_single_text_embedding(txt)
+		
+			txtQuery = np.array(text_query)
+		
+			D, I = txt_idx.search(txtQuery, k = 7)
+		
+			texts = []
+			fn = pd.read_csv('./../vector_search/imageonly.csv')
+			for x in I:
+				for txt in x:
+					res = open(fn['img_only'][txt], 'r')
+					texts.append(res.name.split('/')[-1])
+
+			return render(request, 'searched.html', {'img':texts})
+
 	return render(request, 'searched.html')
