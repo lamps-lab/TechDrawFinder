@@ -14,7 +14,7 @@
   <!-- Page Header -->
   <form>
      <div class="p-3 mb-2 bg-dark text-white text-center">
- 	<p class="text-primary"><h1>Patent Search Engine</h1></p>	
+ 	<p class="text-primary"><h1>Tech Draw Finder</h1></p>	
      </div>
   </form>
   
@@ -44,28 +44,26 @@
     
     <form>
     	{% if query %}
-        	<img src='{{ query }}' class="img-responsive" style="width:200px; height:500px;"/>
+		<h3> Query </h3>
+        	<img src='{{ query }}' class="img-responsive" style="width:15%;"/>
     	{% endif %}
     </form>
 	
     <!-- Displaying the Query Results -->
    
-   <h3><center> Query Results </center></h3>
    <form>
        <form class="d-flex" method = POST action = "{% url 'searched' %}">
           {% if img %}
           <body class="container " style="padding-top: 3%;">
             <div class="row">
+		<h3><center> Query Results </center></h3>
                {% for pic in img %}
 		  <div class="col-md-4">
                      <div class="thumbnail">
-                       <img src='{% static pic %}' class="img-responsive" style="width:200px;height:300px;"/>
-		     <div class ="searched">
-		     <p>{{pic}}</p>
-		   </div>
-		   </a>
-		 </div>
-               </div>
+                       <img src="{% static pic.0 %}" class="img-responsive" style="width:60%;"/>
+		    </div>
+		      <p>{{pic.1}} </p>
+                  </div>
                {% endfor %}
             </div>
 	  </body>
