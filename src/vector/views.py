@@ -78,6 +78,7 @@ def read_img_path(file):
 
 index = faiss.read_index('./../vector_search/vector/vector_db/large_v1.index')
 fn = pd.read_csv('./../vector_search/patent_67000_segmented_metadata.csv')
+fn = fn.replace(np.nan, 'none', regex = True)
 caps = fn['object_infer']
 viewpoint = fn['aspect']
 def searched(request):
@@ -88,7 +89,7 @@ def searched(request):
 		files = request.FILES.get('file')
 		filename = fs.save(files.name, files)
 		
-		path = '/Users/muntabir/search-engine/vector_search/media/'
+		path = './../vector_search/media/'
 		
 		## Displaying the user query
 		url_img = fs.url(filename)
@@ -100,7 +101,7 @@ def searched(request):
 		query_embedding = get_single_image_embedding(query_image)
 		
 		query = np.array(query_embedding)
-		D, I = index.search(query, k=9)
+		D, I = index.search(query, k=15)
 		
 		images = []
 		for x in I:
@@ -114,21 +115,21 @@ def searched(request):
 	else:
 		txt = request.GET.get("query")
 		
-		#txt_idx = faiss.read_index('/Users/muntabir/search-engine/vector_search/vector/vector_db/text.index')
-		
 		if txt is not None:
 			text_query = get_single_text_embedding(txt)
 		
 			txtQuery = np.array(text_query)
 		
-			D, I = index.search(txtQuery, k = 9)
+			D, I = index.search(txtQuery, k = 15)
 		
 			texts = []
-			#fn = pd.read_csv('./../vector_search/patent_67000_segmented_metadata.csv')
 			for x in I:
 				for txt in x:
 					res = open(fn['figure_path'][txt], 'r')
+					test_view = viewpoint[txt]
+					print(test_view)
 					txt_captions = (caps[txt] + ", viewpoint: "+ viewpoint[txt])
+					
 					texts.append((res.name.split('/')[-1], txt_captions))
 
 			return render(request, 'searched.html', {'img':texts})
