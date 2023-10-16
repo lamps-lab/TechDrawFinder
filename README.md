@@ -13,4 +13,4 @@ Under this directory, you will find our Django application with front-end and ba
 Please note that, the media/ directory is where the user provided query will be saved and the static/ is the directory where the USPTO images are stored (currently, we provided only few test data).
 
 ## Demo Link
-Our TechDrawFinder search engine is available at:https://vector-search.cs.odu.edu/
+Our TechDrawFinder search engine is available at: https://vector-search.cs.odu.edu/
